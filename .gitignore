@@ -1,2 +1,6 @@
 data/
 .env
+/nbproject/private/nbproject/
+nbproject/
+.log.conf/
+code/logs/
