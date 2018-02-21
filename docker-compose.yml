@@ -3,6 +3,7 @@ version: '2'
 services:
     web:
         image: nginx:latest
+        container_name: nginx
         ports:
             - "8080:80"
         volumes:
@@ -14,11 +15,37 @@ services:
             - code-network
     php:
         image: php:fpm
+        container_name: phpfpm
         volumes:
             - ./code:/code
         networks:
             - code-network
-
+    myadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
+        ports:
+            - "8081:80"
+        environment:
+            - PMA_ARBITRARY=1
+            - PMA_HOST=${MYSQL_HOST}
+        restart: always
+        depends_on:
+            - mysqldb
+    mysqldb:
+        image: mysql
+        container_name: ${MYSQL_HOST}
+        restart: always
+        env_file:
+            - ".env"
+        environment:
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        ports:
+            - "8989:3306"
+        volumes:
+            - "./data/db/mysql:/var/lib/mysql"
 networks:
     code-network:
         driver: bridge
