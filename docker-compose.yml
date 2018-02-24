@@ -7,7 +7,7 @@ services:
         ports:
             - "8080:80"
         volumes:
-            - ./code:/code
+            - ../../public_html/TraderMetrix:/code
             - ./site.conf:/etc/nginx/conf.d/default.conf
             - ./code/logs/access.log:/var/log/nginx/access.log
             - ./code/logs/error.log:/var/log/nginx/error.log
@@ -17,7 +17,7 @@ services:
         image: php:fpm
         container_name: phpfpm
         volumes:
-            - ./code:/code
+            - ../../public_html/TraderMetrix:/code
         networks:
             - code-network
     myadmin:
@@ -45,7 +45,7 @@ services:
         ports:
             - "8989:3306"
         volumes:
-            - "./data/db/mysql:/var/lib/mysql"
+            - "./data/db/dump:/docker-entrypoint-initdb.d"
 networks:
     code-network:
         driver: bridge
